@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 @Injectable({
@@ -10,7 +10,11 @@ export class ProdsService {
 
 
   getProducts(): Observable<any> {
-    return this.http.get<any>(this.SERVER_URL);
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`
+      });
+    return this.http.get<any>(this.SERVER_URL,{ headers: headers });
   }
   addProduct(prd: any): Observable<any> {
     return this.http.post<any>(this.SERVER_URL, prd);

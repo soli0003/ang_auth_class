@@ -40,13 +40,13 @@ export class AppComponent {
 
   login(pwd:string,user:string){
     this.auth.login(pwd, user).subscribe((res) => localStorage.setItem("token", res.access));
-
+    
   }
     cart:any [] = []
   buy(id: number){
     this.prod_srv.getItem(id).subscribe(res => this.cart.push(res))
     console.log(this.cart);
-    
+
   }
 }
 

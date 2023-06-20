@@ -1,7 +1,7 @@
 from django.http import JsonResponse
 from rest_framework.views import APIView
 from rest_framework import serializers
-from .models import Product
+from .models import Product, ProductSerializer, Order, OrderSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -10,53 +10,35 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 
 
-
-
-@api_view(['GET'])
+@api_view(['post'])
 @permission_classes([IsAuthenticated])
-def index(req):
-    return Response("hello")
+def test(request): # actual order (buy)
+    print(request.user)
 
 
-@api_view(['POST'])
-@permission_classes([IsAuthenticated])
-def checkout(request):
-    user = request.
-    print(user)
-
-    data = {
-        'message': 'Checkout successful'
-    }
-    return JsonResponse(data)
-
-@api_view(['POST'])
-def login(request):
-    username = request.data.get('username')
-    password = request.data.get('password')
-    user = authenticate(request, username=username, password=password)
-    if user is not None:
-        login(request, user)
-        return Response({"message": "Login successful"})
-    else:
-        return Response({"message": "Invalid credentials"}, status=status.HTTP_401_UNAUTHORIZED)
-
-@api_view(['GET'])
-def about(req):
-    return Response('about')
 
 
-class ProductSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Product
-        fields = '__all__'
-
+class cart(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request):
+        cart_items = request.data
+        print(cart_items)
+        serializer = OrderSerializer(data=request.data,  context={'user': request.user},many=True)
+        if serializer.is_valid():
+            cart_items = serializer.save()
+        #     # Process the cart items as needed
+        #     # ...
+            return Response("Cart items received and processed successfully.")
+        else:
+            return Response(serializer.errors, status=400)
+        
 
 class products_view(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request):
         my_model = Product.objects.all()
         serializer = ProductSerializer(my_model, many=True)
         return Response(serializer.data)
-
 
     def post(self, request):
         # usr =request.user
