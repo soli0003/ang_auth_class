@@ -1,0 +1,19 @@
+<div *ngFor="let prod of products">
+    desc:{{ prod.desc }} price:{{ prod.price }}
+    <button (click)="buy(prod.id)">buy</button>
+    <button (click)="del(prod.id)">del - {{ prod.id }}</button>
+    <button (click)="upd(desc.value, +price.value, prod.id)">
+      upd - {{ prod.id }}
+    </button>
+  </div>
+  desc <input #desc /> price<input #price />
+  <button (click)="add(desc.value, +price.value)">Add</button>
+
+  <hr>
+
+  user: <input type="text" #usr>
+  passwordL <input type="password" #pwd>
+  <button (click)="login(pwd.value,usr.value)">Login</button>
+  
+
+  
